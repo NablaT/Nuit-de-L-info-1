@@ -190,6 +190,44 @@
 
     }
 
+    var lastMouseX;
+    var lastMouseY;
+    var mouseX;
+    var mouseY;
+
+    function onMouseMoveDo(event)
+    {
+        // Récupération des coordonnées de l'intéraction
+        if(event.x != undefined && event.y != undefined)
+        {
+            mouseX = event.x;
+            mouseY = event.y;
+        }
+        else
+        {
+            mouseX = event.clientX + document.body.scrollLeft +
+                document.documentElement.scrollLeft;
+            mouseY = event.clientY + document.body.scrollTop +
+                document.documentElement.scrollTop;
+        }
+    }
+
+    function handleMouseMove()
+    {
+        if(lastMouseX != undefined && lastMouseY != undefined)
+        {
+            if(mouseY > lastMouseY) pitchRate = -0.05;
+            else if(mouseY < lastMouseY) pitchRate = 0.05;
+            else pitchRate = 0;
+            if(mouseX > lastMouseX) yawRate = -0.05;
+            else if(mouseX < lastMouseX) yawRate = 0.05;
+            else yawRate = 0;
+        }
+
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+    }
+
 
     var worldVertexPositionBuffer = null;
     var worldVertexTextureCoordBuffer = null;
@@ -304,6 +342,7 @@
     function tick() {
         requestAnimFrame(tick);
         handleKeys();
+        handleMouseMove();
         drawScene();
         animate();
     }
@@ -324,6 +363,7 @@
 
         document.onkeydown = handleKeyDown;
         document.onkeyup = handleKeyUp;
+        canvas.addEventListener("mousemove", onMouseMoveDo, false);
 
         tick();
     }
