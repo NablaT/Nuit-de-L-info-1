@@ -1,0 +1,27 @@
+#loadingtext {
+        position:absolute;
+        top:250px;
+        left:150px;
+        font-size:2em;
+        color: white;
+}
+#leftBar {
+	position:		absolute;
+	 right:		10px;
+	 top:			10px;
+	text-align:	right;
+}
+#trashcan {
+	border:		solid 2px grey;
+	border-radius: 5px;
+	padding:		0 0 0 0;
+}
+#recherche {
+	border:		solid 2px grey;
+	border-radius: 5px;
+	padding:		3 3 3 3;
+	font-style:	italic;
+}
+#recherche:focus {
+	border:		solid 2px #10E9CC;
+}
