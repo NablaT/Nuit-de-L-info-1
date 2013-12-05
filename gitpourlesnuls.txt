@@ -1,0 +1,22 @@
+Commandes importantes git:
+
+Avant de commencer a travailler & Apres avoir fait des modifications:
+
+git pull origin master  : Recupere le projet qui se trouve sur la branche master (pour pouvoir récuperer les nouveautés, voir ce que les autres ont fait)
+
+
+Ensuite: 
+
+
+git add --all  OU git add nomDuFichier.java  : Permet d'ajouter les modifications (git add --all c'est cool)
+
+git commit -m "Description de tes changements ici" : Le -m permet d'ajouter une description à tes changements. Sur github tu peux voir tous les changements 								précisement et avec la description. 
+
+git push origin master  : Tu met en ligne tes modifs. Avant cette étape tes modifications restent en local. 
+
+
+EN CAS DE MERGE:
+
+Hurlez !
+
+Ou appelez nous.
