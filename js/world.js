@@ -1,5 +1,7 @@
 
     var gl;
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
 
     function initGL(canvas) {
         try {
@@ -190,8 +192,8 @@
 
     }
 
-    var lastMouseX;
-    var lastMouseY;
+    var xCenter = viewportWidth/2;
+    var yCenter = viewportHeight/2;
     var mouseX;
     var mouseY;
 
@@ -212,20 +214,14 @@
         }
     }
 
-    function handleMouseMove()
+    function handleMouse()
     {
-        if(lastMouseX != undefined && lastMouseY != undefined)
-        {
-            if(mouseY > lastMouseY) pitchRate = -0.05;
-            else if(mouseY < lastMouseY) pitchRate = 0.05;
-            else pitchRate = 0;
-            if(mouseX > lastMouseX) yawRate = -0.05;
-            else if(mouseX < lastMouseX) yawRate = 0.05;
-            else yawRate = 0;
-        }
-
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
+        if(mouseY > yCenter + 40) pitchRate = -(Math.abs(mouseY - yCenter))/(viewportHeight/2)*0.1;
+        else if(mouseY < yCenter - 40) pitchRate = (Math.abs(mouseY - yCenter))/(viewportHeight/2)*0.1;
+        else pitchRate = 0;
+        if(mouseX > xCenter + 60) yawRate = -(Math.abs(mouseX - xCenter))/(viewportWidth/2)*0.1;
+        else if(mouseX < xCenter - 60) yawRate = (Math.abs(mouseX - xCenter))/(viewportWidth/2)*0.1;
+        else yawRate = 0;
     }
 
 
@@ -342,7 +338,7 @@
     function tick() {
         requestAnimFrame(tick);
         handleKeys();
-        handleMouseMove();
+        handleMouse();
         drawScene();
         animate();
     }
@@ -351,8 +347,8 @@
 
     function webGLStart() {
         var canvas = document.getElementById("canvas");
-        canvas.style.height = window.innerHeight;
-        canvas.style.width = window.innerWidth;
+        canvas.style.height = viewportHeight;
+        canvas.style.width = viewportWidth;
         initGL(canvas);
         initShaders();
         initTexture();
