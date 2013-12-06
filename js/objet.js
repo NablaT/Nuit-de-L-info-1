@@ -1,4 +1,7 @@
 var objets = [];
+var tilt = 90;
+var spin = 0;
+    
 function initWorldObjects() {
 	var numObjet = 50;
 
@@ -15,6 +18,27 @@ function Objet(startingDistance, rotationSpeed) {
     this.randomiseColors();
 }
 
+	var objetTexture;
+function initObjetTexture() {
+        objetTexture = gl.createTexture();
+        objetTexture.image = new Image();
+        objetTexture.image.onload = function () {
+            handleLoadedTexture(objetTexture)
+        }
+
+        mudTexture.image.src = "image/nehe.gif";
+        objetTexture.image.src = "image/star.gif";
+    }
+function handleLoadedTexture(texture) {
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
 Objet.prototype.draw = function(/*tilt, spin,*/ twinkle) {
     mvPushMatrix();
 	// Move to the star's position
@@ -26,7 +50,7 @@ Objet.prototype.draw = function(/*tilt, spin,*/ twinkle) {
     if (twinkle) {
       // Draw a non-rotating star in the alternate "twinkling" color
       gl.uniform3f(shaderProgram.colorUniform, this.twinkleR, this.twinkleG, this.twinkleB);
-      drawStar();
+      drawObjet();
     }
 
     // All stars spin around the Z axis at the same rate
@@ -64,19 +88,47 @@ Objet.prototype.randomiseColors = function() {
     this.twinkleB = Math.random();
 };
 
+    function initBuffers() {
+        objetVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, objetVertexPositionBuffer);
+        vertices = [
+            -1.0, -1.0,  0.0,
+             1.0, -1.0,  0.0,
+            -1.0,  1.0,  0.0,
+             1.0,  1.0,  0.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        objetVertexPositionBuffer.itemSize = 3;
+        objetVertexPositionBuffer.numItems = 4;
+
+        objetVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, objetVertexTextureCoordBuffer);
+        var textureCoords = [
+            0.0, 0.0,
+            1.0, 0.0,
+            0.0, 1.0,
+            1.0, 1.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+        objetVertexTextureCoordBuffer.itemSize = 2;
+        objetVertexTextureCoordBuffer.numItems = 4;
+    }
+
+var objetVertexTextureCoordBuffer;
+var objetVertexPositionBuffer;	
 function drawObjet() {
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D,null/* objetTexture*/);
+    gl.bindTexture(gl.TEXTURE_2D, objetTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, starVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, starVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, objetVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, objetVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, starVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, objetVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, objetVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 0/*starVertexPositionBuffer.numItems*/);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, objetVertexPositionBuffer.numItems);
 }
 
 /*precision mediump float;

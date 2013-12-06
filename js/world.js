@@ -1,4 +1,3 @@
-
     var gl;
     var viewportWidth = window.innerWidth;
     var viewportHeight = window.innerHeight;
@@ -80,27 +79,16 @@ function initShaders() {
     shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
 }
 
-    function handleLoadedTexture(texture) {
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-        gl.bindTexture(gl.TEXTURE_2D, null);
-    }
-
-
     var mudTexture;
-
     function initTexture() {
         mudTexture = gl.createTexture();
         mudTexture.image = new Image();
         mudTexture.image.onload = function () {
-            handleLoadedTexture(mudTexture)
+            handleLoadedTexture(mudTexture);
         }
 
         mudTexture.image.src = "image/nehe.gif";
+        initObjetTexture();
     }
 
 
@@ -300,11 +288,11 @@ function drawScene() {
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	/*var twinkle = document.getElementById("twinkle").checked;
+	var twinkle = document.getElementById("twinkle").checked;
 	for (var i in objets) {
 		objets[i].draw(tilt, spin, twinkle);
 		spin += 0.1;
-    }*/
+    }
 
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, worldVertexPositionBuffer.numItems);
@@ -328,9 +316,9 @@ function drawScene() {
                 yPos = Math.sin(degToRad(joggingAngle)) / 20 + 0.4
             }
             
-            /*for (var i in objets) {
+            for (var i in objets) {
 				objets[i].animate(elapsed);
-			}*/
+			}
 
             yaw += yawRate * elapsed;
             pitch += pitchRate * elapsed;
